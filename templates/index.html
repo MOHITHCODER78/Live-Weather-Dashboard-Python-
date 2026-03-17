@@ -3,150 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Weather Dashboard</title>
+    <title>Arcane Weather | Professional Geospatial Dashboard</title>
+    
+    <!-- External Resources -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-cloud-sun"></i> Live Weather Dashboard</h1>
-            <p class="subtitle">Real-time weather data visualization and analysis</p>
+<body class="dark-theme" data-api-key="{{ api_key }}">
+    <div class="dashboard-wrapper">
+        <!-- Full Screen Map Background -->
+        <section class="map-container">
+            <div id="map"></div>
+        </section>
+
+        <!-- Top Navigation Bar (Floating) -->
+        <header class="floating-header glass">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-satellite-dish"></i>
+                    <span class="logo-text">LIVE <span>WEATHER</span></span>
+                </div>
+            </div>
+
+            <div class="header-center">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="citySearch" placeholder="Search Location..." autocomplete="off">
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="header-stats">
+                    <div class="stat-bubble extreme" id="bubbleExtreme">EXTREME: <span id="countExtreme">0</span></div>
+                    <div class="stat-bubble severe" id="bubbleSevere">SEVERE: <span id="countSevere">0</span></div>
+                    
+                    <button id="exportReport" class="icon-btn" title="Mission Report">
+                        <i class="fas fa-file-pdf"></i>
+                    </button>
+                    
+                    {% if current_user.is_authenticated %}
+                    <div class="user-profile">
+                        <span class="user-name">{{ current_user.name }}</span>
+                        <a href="{{ url_for('auth.logout') }}" class="logout-link"><i class="fas fa-power-off"></i></a>
+                    </div>
+                    {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="login-link">Login</a>
+                    {% endif %}
+                </div>
+            </div>
         </header>
 
-        <div class="search-section">
-            <div class="search-box">
-                <input type="text" id="cityInput" placeholder="Enter city name (e.g., London, New York, Tokyo)" autocomplete="off">
-                <button id="searchBtn" onclick="searchWeather()">
-                    <i class="fas fa-search"></i> Search
-                </button>
+        <!-- Left Panel: Intelligence & Alerts -->
+        <aside class="panel panel-left glass">
+            <div class="panel-section">
+                <h3 class="panel-title"><i class="fas fa-bolt"></i> ALERT FEED</h3>
+                <div id="alertContainer" class="panel-scroll">
+                    <div class="alert-placeholder">Scanning signals...</div>
+                </div>
             </div>
-            <div id="errorMessage" class="error-message"></div>
-        </div>
 
-        <div id="loadingSpinner" class="loading-spinner" style="display: none;">
-            <div class="spinner"></div>
-            <p>Loading weather data...</p>
-        </div>
+            <div class="panel-section">
+                <h3 class="panel-title"><i class="fas fa-microchip"></i> AI BRIEFING</h3>
+                <div id="aiBriefing" class="ai-card">
+                    <div id="aiBriefingContent">Syncing...</div>
+                    <div class="ai-scan-line"></div>
+                </div>
+            </div>
 
-        <div id="weatherContent" style="display: none;">
-            <!-- Current Weather Card -->
-            <div class="current-weather-card">
-                <div class="weather-header">
-                    <div>
-                        <h2 id="cityName">-</h2>
-                        <p id="countryName" class="country">-</p>
-                    </div>
-                    <div class="weather-icon-container">
-                        <img id="weatherIcon" src="" alt="Weather Icon">
-                        <p id="weatherDescription" class="description">-</p>
-                    </div>
+            <div class="panel-section">
+                <h3 class="panel-title"><i class="fas fa-history"></i> RECENT INTEL</h3>
+                <div id="historyContainer" class="panel-scroll" style="max-height: 180px;">
+                    <div class="alert-placeholder">No history</div>
                 </div>
-                <div class="temperature-section">
-                    <div class="main-temp">
-                        <span id="temperature">-</span>
-                        <span class="unit">°C</span>
-                    </div>
-                    <p class="feels-like">Feels like <span id="feelsLike">-</span>°C</p>
-                </div>
-                <div class="weather-details-grid">
-                    <div class="detail-item">
-                        <i class="fas fa-tint"></i>
-                        <div>
-                            <p class="label">Humidity</p>
-                            <p class="value" id="humidity">-</p>
-                        </div>
-                    </div>
-                    <div class="detail-item">
-                        <i class="fas fa-wind"></i>
-                        <div>
-                            <p class="label">Wind Speed</p>
-                            <p class="value" id="windSpeed">-</p>
-                        </div>
-                    </div>
-                    <div class="detail-item">
-                        <i class="fas fa-compress-arrows-alt"></i>
-                        <div>
-                            <p class="label">Pressure</p>
-                            <p class="value" id="pressure">-</p>
-                        </div>
-                    </div>
-                    <div class="detail-item">
-                        <i class="fas fa-eye"></i>
-                        <div>
-                            <p class="label">Visibility</p>
-                            <p class="value" id="visibility">-</p>
-                        </div>
-                    </div>
-                    <div class="detail-item">
-                        <i class="fas fa-cloud"></i>
-                        <div>
-                            <p class="label">Clouds</p>
-                            <p class="value" id="clouds">-</p>
-                        </div>
-                    </div>
-                    <div class="detail-item">
-                        <i class="fas fa-sun"></i>
-                        <div>
-                            <p class="label">Sunrise</p>
-                            <p class="value" id="sunrise">-</p>
-                        </div>
-                    </div>
-                    <div class="detail-item">
-                        <i class="fas fa-moon"></i>
-                        <div>
-                            <p class="label">Sunset</p>
-                            <p class="value" id="sunset">-</p>
-                        </div>
+            </div>
+        </aside>
+
+        <!-- Right Panel: Telemetry & Forecast -->
+        <aside class="panel panel-right glass">
+            <div class="panel-section">
+                <h3 class="panel-title"><i class="fas fa-gauge-high"></i> TELEMETRY</h3>
+                <div class="telemetry-card">
+                    <div id="tempGauge"></div>
+                    <div class="telemetry-grid">
+                        <div class="tel-item"><span class="lbl">HUM</span><span class="val" id="valHumidity">--</span></div>
+                        <div class="tel-item"><span class="lbl">WIND</span><span class="val" id="valWind">--</span></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Charts Section -->
-            <div class="charts-section">
-                <h3 class="section-title"><i class="fas fa-chart-line"></i> Data Visualizations</h3>
-                <div class="charts-grid">
-                    <div class="chart-card">
-                        <h4>Temperature Forecast</h4>
-                        <div class="chart-container">
-                            <img id="tempChart" src="" alt="Temperature Chart" style="display: none;">
-                        </div>
-                    </div>
-                    <div class="chart-card">
-                        <h4>Humidity Forecast</h4>
-                        <div class="chart-container">
-                            <img id="humidityChart" src="" alt="Humidity Chart" style="display: none;">
-                        </div>
-                    </div>
-                    <div class="chart-card">
-                        <h4>Weather Distribution</h4>
-                        <div class="chart-container">
-                            <img id="distributionChart" src="" alt="Distribution Chart" style="display: none;">
-                        </div>
-                    </div>
-                    <div class="chart-card">
-                        <h4>Pressure Forecast</h4>
-                        <div class="chart-container">
-                            <img id="pressureChart" src="" alt="Pressure Chart" style="display: none;">
-                        </div>
-                    </div>
+            <div class="panel-section">
+                <h3 class="panel-title"><i class="fas fa-brain"></i> ANALYSIS</h3>
+                <div class="analysis-row">
+                    <div class="ana-item"><span class="lbl">AVG</span><span id="avgTemp" class="val">--</span></div>
+                    <div class="ana-item"><span class="lbl">RANGE</span><span id="rangeTemp" class="val">--</span></div>
                 </div>
             </div>
 
-            <!-- Forecast Section -->
-            <div class="forecast-section">
-                <h3 class="section-title"><i class="fas fa-calendar-alt"></i> 5-Day Forecast</h3>
-                <div id="forecastContainer" class="forecast-container"></div>
+            <div class="panel-section">
+                <h3 class="panel-title"><i class="fas fa-chart-line"></i> 24H TREND</h3>
+                <div class="trend-small">
+                    <div id="trendChart"></div>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h3 class="panel-title"><i class="fas fa-calendar-days"></i> 5-DAY OUTLOOK</h3>
+                <div id="dayForecast" class="outlook-scroll"></div>
+            </div>
+        </aside>
+
+        <!-- Bottom Controls: Timeline & Status (Zoom Earth Style) -->
+        <div class="bottom-overlay">
+            <div class="timeline-container glass">
+                <div class="timeline-controls">
+                    <button id="radarPlay" class="play-btn"><i class="fas fa-play"></i></button>
+                    <div class="timeline-info">
+                        <div id="systemStatus"><span class="status-dot"></span> CONNECTED</div>
+                        <div id="lastUpdate">--:--:--</div>
+                    </div>
+                    <button id="mapFullscreen" class="fullscreen-btn"><i class="fas fa-expand"></i></button>
+                </div>
+                <div class="timeline-meta">
+                    <div id="mapCoordinates">Lat: 0.00 Lon: 0.00</div>
+                    <div class="link-status">GEO-LINK STABLE <i class="fas fa-satellite"></i></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <footer>
-        <p>Powered by OpenWeatherMap API | Built with Flask & Python</p>
-    </footer>
-
+    <!-- Dashboard Logic -->
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 </body>
 </html>
-

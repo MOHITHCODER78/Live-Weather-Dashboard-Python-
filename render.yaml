@@ -1,3 +1,9 @@
+databases:
+  - name: weather-db
+    databaseName: weather_intel
+    user: weather_admin
+    plan: free
+
 services:
   - type: web
     name: live-weather-dashboard
@@ -8,5 +14,9 @@ services:
     envVars:
       - key: OPENWEATHER_API_KEY
         sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: weather-db
+          property: connectionString
     plan: free
 
