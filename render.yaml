@@ -9,7 +9,7 @@ services:
     name: live-weather-dashboard
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
+    startCommand: gunicorn wsgi:app
     envVars:
       - key: OPENWEATHER_API_KEY
         sync: false
