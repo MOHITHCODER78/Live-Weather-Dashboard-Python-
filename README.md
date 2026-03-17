@@ -5,7 +5,7 @@ An immersive, full-screen weather dashboard inspired by high-end geospatial inte
 
 ---
 
-## 🚀 Key Highlights
+##  Key Highlights
 
 ### Geospatial Command Center
 * **Interactive Global Map**: Full-screen GIS interface built with Leaflet.js, featuring real-time coordinate tracking and zoom telemetry.
@@ -24,7 +24,7 @@ An immersive, full-screen weather dashboard inspired by high-end geospatial inte
 
 ---
 
-## 🛠 Technical Stack
+##  Technical Stack
 
 ### Core Technologies
 *   **Backend**: Flask (Python) with Flask-Login & SQLAlchemy
@@ -40,7 +40,7 @@ An immersive, full-screen weather dashboard inspired by high-end geospatial inte
 
 ---
 
-## ⚙️ Local Setup
+##  Local Setup
 
 1. **Clone & Navigate**
    ```bash
@@ -64,7 +64,7 @@ An immersive, full-screen weather dashboard inspired by high-end geospatial inte
 
 ---
 
-## ☁️ Production Deployment
+##  Production Deployment
 
 This project is optimized for deployment on **Render.com** using the provided `render.yaml` blueprint.
 
@@ -77,8 +77,8 @@ This project is optimized for deployment on **Render.com** using the provided `r
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 Contributions that push the boundaries of weather intelligence are welcome. Please fork the repo and submit a Pull Request.
 
-**Author**: [Mohit Naidu](https://github.com/MOHITHCODER78)  
+**Author**: [Mohith Naidu](https://github.com/MOHITHCODER78)  
 **License**: MIT
