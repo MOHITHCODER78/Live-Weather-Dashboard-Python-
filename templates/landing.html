@@ -130,6 +130,43 @@
             text-transform: uppercase;
             letter-spacing: 0.1em;
         }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+                letter-spacing: -1px;
+            }
+            .hero-subtitle {
+                font-size: 0.9rem;
+                letter-spacing: 0.2em;
+                margin-bottom: 20px;
+            }
+            .hero-description {
+                font-size: 1rem;
+                margin-bottom: 30px;
+            }
+            .cta-group {
+                flex-direction: column;
+                width: 100%;
+                max-width: 280px;
+            }
+            .btn-primary, .btn-secondary {
+                padding: 14px 20px;
+                font-size: 1rem;
+                text-align: center;
+            }
+            .landing-stats {
+                gap: 20px;
+                bottom: 20px;
+            }
+            .stat-val {
+                font-size: 1.1rem;
+            }
+            .stat-lbl {
+                font-size: 0.6rem;
+            }
+        }
     </style>
 </head>
 <body class="dark-theme">

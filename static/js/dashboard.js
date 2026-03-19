@@ -231,6 +231,57 @@ function setupEventListeners() {
 
     const exportBtn = document.getElementById('exportReport');
     if (exportBtn) exportBtn.addEventListener('click', exportDashboardToPDF);
+
+    // Mobile UI Handlers
+    const panelL = document.querySelector('.panel-left');
+    const panelR = document.querySelector('.panel-right');
+    const toggleL = document.getElementById('toggleLeft');
+    const toggleR = document.getElementById('toggleRight');
+    const backdrop = document.getElementById('panelBackdrop');
+
+    const togglePanel = (target) => {
+        const isActive = target.classList.contains('active');
+        // Close all if opening a new one
+        panelL.classList.remove('active');
+        panelR.classList.remove('active');
+        
+        if (!isActive) {
+            target.classList.add('active');
+            backdrop.classList.add('active');
+        } else {
+            backdrop.classList.remove('active');
+        }
+    };
+
+    if (toggleL) toggleL.onclick = () => togglePanel(panelL);
+    if (toggleR) toggleR.onclick = () => togglePanel(panelR);
+    if (backdrop) backdrop.onclick = () => {
+        panelL.classList.remove('active');
+        panelR.classList.remove('active');
+        backdrop.classList.remove('active');
+    };
+
+    // Mobile Search Handlers
+    const mSearchTrigger = document.getElementById('mobileSearchTrigger');
+    const mSearchOverlay = document.getElementById('mobileSearchOverlay');
+    const closeSearch = document.getElementById('closeSearch');
+    const mSearchInput = document.getElementById('mobileCitySearch');
+
+    if (mSearchTrigger) mSearchTrigger.onclick = () => {
+        mSearchOverlay.classList.add('active');
+        mSearchInput.focus();
+    };
+    if (closeSearch) closeSearch.onclick = () => mSearchOverlay.classList.remove('active');
+    
+    if (mSearchInput) {
+        mSearchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                updateDashboard(mSearchInput.value);
+                mSearchOverlay.classList.remove('active');
+                mSearchInput.value = '';
+            }
+        });
+    }
 }
 
 function toggleRadarLoop() {

@@ -33,6 +33,11 @@
                 </div>
             </div>
 
+            <!-- Mobile Search Trigger -->
+            <button class="mobile-search-trigger" id="mobileSearchTrigger" style="display: none;">
+                <i class="fas fa-search"></i>
+            </button>
+
             <div class="header-center">
                 <div class="search-bar">
                     <i class="fas fa-search"></i>
@@ -137,6 +142,22 @@
                 </div>
             </div>
         </div>
+        <!-- Mobile Interaction Elements -->
+        <div class="mobile-toggles" style="display: none;">
+            <button class="toggle-btn" id="toggleLeft" title="Alerts & Intelligence">
+                <i class="fas fa-bolt"></i>
+            </button>
+            <button class="toggle-btn" id="toggleRight" title="Telemetry & Analysis">
+                <i class="fas fa-chart-line"></i>
+            </button>
+        </div>
+
+        <div class="mobile-search-overlay" id="mobileSearchOverlay">
+            <button id="closeSearch" style="background:none; border:none; color:white; font-size:1.5rem;"><i class="fas fa-chevron-left"></i></button>
+            <input type="text" id="mobileCitySearch" placeholder="Enter City Name...">
+        </div>
+
+        <div class="panel-backdrop" id="panelBackdrop"></div>
     </div>
 
     <!-- Dashboard Logic -->
