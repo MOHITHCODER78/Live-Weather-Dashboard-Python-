@@ -58,7 +58,7 @@ An immersive, full-screen weather dashboard inspired by high-end geospatial inte
 3. **Install & Launch**
    ```bash
    pip install -r requirements.txt
-   python app.py
+   python wsgi.py
    ```
    *Access the terminal at `http://127.0.0.1:5000`*
 
