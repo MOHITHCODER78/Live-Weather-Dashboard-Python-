@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /instance/
 Disallow: /venv/
-Sitemap: https://live-weather-dashboard-python.onrender.com/sitemap.xml
+Sitemap: https://live-weather-dashboard-l5mr.onrender.com/sitemap.xml
