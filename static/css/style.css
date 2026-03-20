@@ -380,6 +380,14 @@ body {
     color: black;
 }
 
+/* Hide mobile-only elements on desktop */
+.mobile-search-trigger, 
+.mobile-toggles, 
+.mobile-search-overlay,
+.panel-backdrop {
+    display: none;
+}
+
 /* Floating Panels */
 .panel {
     position: absolute;
@@ -631,8 +639,8 @@ body {
     }
 }
 
-/* Mobile Devices */
-@media (max-width: 768px) {
+/* Mobile Devices and High-Res Phones */
+@media (max-width: 1024px) {
     body {
         overflow: auto; /* Allow scrolling if panels are open */
         height: auto;
